@@ -32,6 +32,19 @@ let context = {
     lastPerson: null
 };
 
+function saveConversation() {
+    const messagesDiv = document.getElementById('messages');
+    localStorage.setItem('conversation', messagesDiv.innerHTML);
+}
+
+function loadConversation() {
+    const savedConversation = localStorage.getItem('conversation');
+    if (savedConversation) {
+        document.getElementById('messages').innerHTML = savedConversation;
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+}
+
 function sendMessage() {
     const inputField = document.getElementById('user-input');
     const userMessage = inputField.value.toLowerCase().trim();
@@ -42,10 +55,11 @@ function sendMessage() {
     const response = getResponse(userMessage);
     appendMessage('AI', response);
     inputField.value = '';
+    saveConversation();
 }
 
 function getResponse(message) {
-    const normalizedMessage = message.toLowerCase();
+const normalizedMessage = message.toLowerCase();
 
     const personMentioned = identifyPerson(normalizedMessage);
 
@@ -193,6 +207,7 @@ function appendMessage(sender, message) {
 }
 
 window.onload = function() {
+    loadConversation();
     setTimeout(() => {
         appendMessage('AI', "Hola, bienvenido. Soy una IA creada por Fernando para servirte. ¿En qué puedo ayudarte hoy?");
     }, 500); // 0.5 segundos de retraso para simular escritura
