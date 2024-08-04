@@ -39,6 +39,7 @@
             border-top: 1px solid #ddd;
             background: #f9f9f9;
             padding: 10px;
+            align-items: center;
         }
 
         #user-input {
@@ -55,7 +56,7 @@
             border-color: #007bff;
         }
 
-        #send-button {
+        #send-button, #upload-button {
             background-color: #007bff;
             color: #fff;
             border: none;
@@ -68,9 +69,21 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #send-button:hover {
+        #send-button:hover, #upload-button:hover {
             background-color: #0056b3;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        #upload-button {
+            background-color: #28a745;
+        }
+
+        #upload-button:hover {
+            background-color: #218838;
+        }
+
+        #upload-input {
+            display: none;
         }
 
         .message {
@@ -79,6 +92,7 @@
             border-radius: 10px;
             max-width: 75%;
             clear: both;
+            position: relative;
         }
 
         .message.you {
@@ -107,6 +121,11 @@
             top: 10px;
             left: -10px;
         }
+
+        .message img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -114,6 +133,8 @@
         <div id="messages"></div>
         <div id="user-input-container">
             <input type="text" id="user-input" placeholder="Type your message here...">
+            <button id="upload-button">+</button>
+            <input type="file" id="upload-input" accept="image/*">
             <button id="send-button" onclick="sendMessage()">Send</button>
         </div>
     </div>
