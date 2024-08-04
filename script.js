@@ -40,8 +40,9 @@ function saveConversation() {
 function loadConversation() {
     const savedConversation = localStorage.getItem('conversation');
     if (savedConversation) {
-        document.getElementById('messages').innerHTML = savedConversation;
-        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        const messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML = savedConversation;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 }
 
@@ -59,7 +60,7 @@ function sendMessage() {
 }
 
 function getResponse(message) {
-const normalizedMessage = message.toLowerCase();
+    const normalizedMessage = message.toLowerCase();
 
     const personMentioned = identifyPerson(normalizedMessage);
 
@@ -181,14 +182,14 @@ function getChallenges(person) {
     return "No tengo información sobre los desafíos de esa persona.";
 }
 
-function appendMessage(sender, message) {
+function appendMessage(sender, message, instant = false) {
     const messagesDiv = document.getElementById('messages');
     const messageElement = document.createElement('div');
     messageElement.className = `message ${sender.toLowerCase()}`;
     messagesDiv.appendChild(messageElement);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
     
-    if (sender === 'AI') {
+    if (sender === 'AI' && !instant) {
         let index = 0;
         const typingSpeed = 50; // Velocidad de escritura en milisegundos
 
@@ -202,13 +203,35 @@ function appendMessage(sender, message) {
 
         type();
     } else {
-        messageElement.textContent = message;
+        messageElement.innerHTML = message;
+    }
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imageUrl = e.target.result;
+            appendMessage('You', `<img src="${imageUrl}" alt="Uploaded Image">`);
+        };
+        reader.readAsDataURL(file);
     }
 }
 
 window.onload = function() {
     loadConversation();
-    setTimeout(() => {
-        appendMessage('AI', "Hola, bienvenido. Soy una IA creada por Fernando para servirte. ¿En qué puedo ayudarte hoy?");
-    }, 500); // 0.5 segundos de retraso para simular escritura
+    const messagesDiv = document.getElementById('messages');
+    if (!messagesDiv.hasChildNodes()) {
+        // Solo envía el mensaje de bienvenida si no hay mensajes en el div
+        setTimeout(() => {
+            appendMessage('AI', "Hola, bienvenido. Soy una IA creada por Fernando para servirte. ¿En qué puedo ayudarte hoy?");
+        }, 500); // 0.5 segundos de retraso para simular escritura
+    }
 };
+
+document.getElementById('upload-button').addEventListener('click', () => {
+    document.getElementById('upload-input').click();
+});
+
+document.getElementById('upload-input').addEventListener('change', handleImageUpload);
