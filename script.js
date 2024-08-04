@@ -1,5 +1,3 @@
-// script.js
-
 const data = {
     "Stalin Fernando Armijo": {
         edad: "16 años",
@@ -46,18 +44,6 @@ function sendMessage() {
     inputField.value = '';
 }
 
-function typeWriter(element, text, speed) {
-    let i = 0;
-    function type() {
-        if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    type();
-}
-
 function getResponse(message) {
     const normalizedMessage = message.toLowerCase();
 
@@ -92,162 +78,7 @@ function getResponse(message) {
     }
 
     if (normalizedMessage.includes("hola") || normalizedMessage.includes("buenos días") || normalizedMessage.includes("buenas tardes") || normalizedMessage.includes("buenas noches")) {
-        return "¡Hola! ¿En qué puedo ayudarte hoy? Si tienes preguntas sobre Stalin Fernando Armijo o Nury, estaré encantado de responderlas.";
-    } else if (normalizedMessage.includes("cómo estás") || normalizedMessage.includes("qué tal") || normalizedMessage.includes("cómo te va")) {
-        return "Estoy bien, gracias por preguntar. ¿Y tú? ¿Cómo puedo asistirte hoy?";
-    } else if (normalizedMessage.includes("ayuda") || normalizedMessage.includes("asistencia") || normalizedMessage.includes("necesito ayuda")) {
-        return "Claro, estoy aquí para ayudarte. ¿Sobre qué tema necesitas información o asistencia?";
-    } else if (normalizedMessage.includes("adiós") || normalizedMessage.includes("hasta luego") || normalizedMessage.includes("nos vemos")) {
-        return "¡Hasta luego! Si necesitas más información en el futuro, no dudes en preguntar. ¡Que tengas un buen día!";
-    } else if (normalizedMessage.includes("información general") || normalizedMessage.includes("detalles generales") || normalizedMessage.includes("de qué trata esto")) {
-        return "Este bot está diseñado para proporcionar información sobre dos personas específicas: Stalin Fernando Armijo y Nury. Puedes preguntar sobre sus detalles personales, familia, intereses, estudios y mucho más.";
-    } else if (normalizedMessage.includes("preguntas frecuentes") || normalizedMessage.includes("cómo funciona") || normalizedMessage.includes("dudas comunes")) {
-        return "Puedes preguntar sobre aspectos específicos de Stalin Fernando Armijo o Nury, incluyendo su edad, familia, estudios, intereses, y más. También puedo responder a preguntas generales sobre cómo uso esta información.";
-    } else if (normalizedMessage.includes("cuál es tu propósito") || normalizedMessage.includes("por qué existes") || normalizedMessage.includes("qué puedes hacer")) {
-        return "Mi propósito es proporcionar información detallada sobre Stalin Fernando Armijo y Nury, así como responder a preguntas generales relacionadas con ellos. Si tienes alguna pregunta específica, no dudes en hacerla.";
-    } else if (normalizedMessage.includes("error") || normalizedMessage.includes("problema") || normalizedMessage.includes("no entiendo")) {
-        return "Lo siento si algo no quedó claro. Por favor, proporciona más detalles o reformula tu pregunta y estaré encantado de ayudarte.";
-    } else {
-        return "No estoy seguro de a qué te refieres. ¿Puedes proporcionar más detalles o hacer una pregunta específica sobre Stalin Fernando Armijo o Nury?";
-    }
-}
-
-function identifyPerson(message) {
-    if (message.includes("stalin") || message.includes("fernando") || message.includes("armijo")) {
-        return "Stalin Fernando Armijo";
-    } else if (message.includes("nury")) {
-        return "Nury";
-    }
-    return null;
-}
-
-function getPersonDetails(person) {
-    const details = data[person];
-    if (!details) return `No tengo información sobre ${person}.`;
-    return `Aquí tienes información sobre ${person}: Edad: ${details.edad}, Fecha de nacimiento: ${details.fechaNacimiento}, Lugar de origen: ${details.lugarOrigen}, Familia: Madre: ${details.familia.madre}, Hermanos: ${details.familia.hermanos.join(", ")}, Estudios: ${details.estudios}, Amigo: ${details.amigo}, Intereses: ${details.intereses.join(", ")}, Personalidad: ${details.personalidad.join(", ")}.`;
-}
-
-function getFamilyDetails(person) {
-    const details = data[person]?.familia;
-    if (!details) return `No tengo información sobre la familia de ${person}.`;
-    return `La familia de ${person} incluye: Padre: ${details.padre || "No especificado"}, Hermana mayor: ${details.hermanaMayor || "No especificado"}, Hermano mayor: ${details.hermanoMayor ? "Sí" : "No"}.`;
-}
-
-function getFriendDetails(person) {
-    const friend = data[person]?.amigo;
-    if (!friend) return `No tengo información sobre los amigos de ${person}.`;
-    return `El amigo de ${person} es ${friend}.`;
-}
-
-function getEducationDetails(person) {
-    const studies = data[person]?.estudios;
-    if (!studies) return `No tengo información sobre la educación de ${person}.`;
-    return `${person} está cursando ${studies}.`;
-}
-
-function getHobbiesDetails(person) {
-    const hobbies = data[person]?.intereses;
-    if (!hobbies) return `No tengo información sobre los pasatiempos de ${person}.`;
-    return `${person} tiene los siguientes intereses: ${hobbies.join(", ")}.`;
-}
-
-function getJobDetails(person) {
-    // Aquí puedes agregar detalles sobre el empleo si se especifican en el futuro.
-    return `No tengo información sobre el empleo de ${person}.`;
-}
-
-function getFuturePlans(person) {
-    // Aquí puedes agregar detalles sobre los planes futuros si se especifican en el futuro.
-    return `No tengo información sobre los planes futuros de ${person}.`;
-}
-
-function getAchievements(person) {
-    // Aquí puedes agregar detalles sobre los logros si se especifican en el futuro.
-    return `No tengo información sobre los logros de ${person}.`;
-}
-
-function getChallenges(person) {
-    // Aquí puedes agregar detalles sobre los desafíos si se especifican en el futuro.
-    return `No tengo información sobre los desafíos de ${person}.`;
-}
-
-// Función para mostrar mensajes con animación de escritura lenta
-function typeWriter(element, text, speed) {
-    let i = 0;
-    function type() {
-        if (i < text.length) {
-            element.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    type();
-}
-
-// Función para añadir mensajes al área de mensajes
-function appendMessage(sender, message) {
-    const messagesDiv = document.getElementById('messages');
-    const messageElement = document.createElement('div');
-    messageElement.textContent = `${sender}: `;
-    messagesDiv.appendChild(messageElement);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    if (sender === 'AI') {
-        typeWriter(messageElement, message, 50); // Ajusta la velocidad de escritura aquí (en milisegundos)
-    } else {
-        messageElement.textContent = `${sender}: ${message}`;
-    }
-}
-
-// Función principal para manejar mensajes del usuario
-function sendMessage() {
-    const inputField = document.getElementById('user-input');
-    const userMessage = inputField.value.toLowerCase().trim();
-
-    if (!userMessage) return;
-
-    appendMessage('You', inputField.value);
-    const response = getResponse(userMessage);
-    appendMessage('AI', response);
-    inputField.value = '';
-}
-
-// Función para obtener respuesta basada en el mensaje del usuario
-function getResponse(message) {
-    const normalizedMessage = message.toLowerCase();
-
-    const personMentioned = identifyPerson(normalizedMessage);
-
-    if (personMentioned) {
-        context.lastPerson = personMentioned;
-    }
-
-    if (context.lastPerson) {
-        if (normalizedMessage.includes("edad") || normalizedMessage.includes("cuántos años")) {
-            return `${context.lastPerson} tiene ${data[context.lastPerson].edad}.`;
-        } else if (normalizedMessage.includes("hermanos") || normalizedMessage.includes("familia") || normalizedMessage.includes("familiares")) {
-            return getFamilyDetails(context.lastPerson);
-        } else if (normalizedMessage.includes("amigo") || normalizedMessage.includes("amigos")) {
-            return getFriendDetails(context.lastPerson);
-        } else if (normalizedMessage.includes("educación") || normalizedMessage.includes("estudios")) {
-            return getEducationDetails(context.lastPerson);
-        } else if (normalizedMessage.includes("pasatiempos") || normalizedMessage.includes("intereses")) {
-            return getHobbiesDetails(context.lastPerson);
-        } else if (normalizedMessage.includes("empleo") || normalizedMessage.includes("trabajo")) {
-            return getJobDetails(context.lastPerson);
-        } else if (normalizedMessage.includes("futuro") || normalizedMessage.includes("planes futuros")) {
-            return getFuturePlans(context.lastPerson);
-        } else if (normalizedMessage.includes("logros") || normalizedMessage.includes("éxitos")) {
-            return getAchievements(context.lastPerson);
-        } else if (normalizedMessage.includes("desafíos") || normalizedMessage.includes("dificultades")) {
-            return getChallenges(context.lastPerson);
-        } else if (normalizedMessage.includes("información") || normalizedMessage.includes("detalles") || normalizedMessage.includes("qué sabes")) {
-            return getPersonDetails(context.lastPerson);
-        }
-    }
-
-    if (normalizedMessage.includes("hola") || normalizedMessage.includes("buenos días") || normalizedMessage.includes("buenas tardes") || normalizedMessage.includes("buenas noches")) {
-        return "¡Hola! ¿En qué puedo ayudarte hoy? Si tienes preguntas sobre Stalin Fernando Armijo o Nury, estaré encantado de responderlas.";
+        return "¡Hola! Soy una IA creada por Fernando para servirte. ¿En qué puedo ayudarte hoy? Si tienes preguntas sobre Stalin Fernando Armijo o Nury, estaré encantado de responderlas.";
     } else if (normalizedMessage.includes("cómo estás") || normalizedMessage.includes("qué tal") || normalizedMessage.includes("cómo te va")) {
         return "Estoy bien, gracias por preguntar. ¿Y tú? ¿Cómo puedo asistirte hoy?";
     } else if (normalizedMessage.includes("ayuda") || normalizedMessage.includes("asistencia") || normalizedMessage.includes("necesito ayuda")) {
@@ -258,12 +89,10 @@ function getResponse(message) {
         return "Este bot está diseñado para proporcionar información sobre dos personas específicas: Stalin Fernando Armijo y Nury. Puedes preguntar sobre sus detalles personales, familia, intereses, y más.";
     } else if (normalizedMessage.includes("preguntas frecuentes") || normalizedMessage.includes("cómo funciona") || normalizedMessage.includes("dudas comunes")) {
         return "Puedes preguntar sobre aspectos específicos de Stalin Fernando Armijo o Nury, incluyendo su edad, familia, estudios, intereses, y más. También puedo responder a preguntas generales sobre cómo uso esta información.";
-    } else if (normalizedMessage.includes("cuál es tu propósito") || normalizedMessage.includes("por qué existes") || normalizedMessage.includes("qué puedes hacer")) {
-        return "Mi propósito es proporcionar información detallada sobre Stalin Fernando Armijo y Nury, así como responder a preguntas generales relacionadas con ellos. Si tienes alguna pregunta específica, no dudes en hacerla.";
-    } else if (normalizedMessage.includes("error") || normalizedMessage.includes("problema") || normalizedMessage.includes("no entiendo")) {
-        return "Lo siento si algo no quedó claro. Por favor, proporciona más detalles o reformula tu pregunta y estaré encantado de ayudarte.";
+    } else if (normalizedMessage.includes("dudas comunes") || normalizedMessage.includes("preguntas frecuentes")) {
+        return "Puedes preguntar sobre aspectos específicos de Stalin Fernando Armijo o Nury, incluyendo su edad, familia, estudios, intereses, y más. También puedo responder a preguntas generales sobre cómo uso esta información.";
     } else {
-        return "No estoy seguro de a qué te refieres. ¿Puedes proporcionar más detalles o hacer una pregunta específica sobre Stalin Fernando Armijo o Nury?";
+        return "Lo siento, no entendí tu pregunta. Puedes intentar preguntar algo sobre Stalin Fernando Armijo o Nury, o decir 'hola' para obtener más información.";
     }
 }
 
@@ -273,5 +102,98 @@ function identifyPerson(message) {
     } else if (message.includes("nury")) {
         return "Nury";
     }
+
     return null;
 }
+
+function getPersonDetails(person) {
+    return `Aquí tienes información sobre ${person}: ${Object.entries(data[person]).map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`).join(", ")}.`;
+}
+
+function getFamilyDetails(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `Stalin Fernando Armijo tiene los siguientes hermanos: ${data["Stalin Fernando Armijo"].familia.hermanos.join(", ")}. Su madre es ${data["Stalin Fernando Armijo"].familia.madre}.`;
+    } else if (person === "Nury") {
+        return `Nury tiene un hermano mayor y su hermana mayor se fue con su madre. Su padre está separado de su madre.`;
+    }
+}
+
+function getFriendDetails(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `El amigo de Stalin Fernando Armijo es ${data["Stalin Fernando Armijo"].amigo}.`;
+    }
+    return "No tengo información sobre los amigos de esa persona.";
+}
+
+function getEducationDetails(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `Stalin Fernando Armijo está estudiando 2º de Bachillerato en el colegio Distacia los fines de semana.`;
+    }
+    return "No tengo información sobre la educación de esa persona.";
+}
+
+function getHobbiesDetails(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `A Stalin Fernando Armijo le interesa jugar a "Solo Leveling: Arcie" y pasar tiempo con Nury.`;
+    }
+    return "No tengo información sobre los pasatiempos de esa persona.";
+}
+
+function getJobDetails(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `No tengo información sobre el empleo de Stalin Fernando Armijo.`;
+    }
+    return "No tengo información sobre el empleo de esa persona.";
+}
+
+function getFuturePlans(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `No tengo información sobre los planes futuros de Stalin Fernando Armijo.`;
+    }
+    return "No tengo información sobre los planes futuros de esa persona.";
+}
+
+function getAchievements(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `No tengo información sobre los logros de Stalin Fernando Armijo.`;
+    }
+    return "No tengo información sobre los logros de esa persona.";
+}
+
+function getChallenges(person) {
+    if (person === "Stalin Fernando Armijo") {
+        return `No tengo información sobre los desafíos que ha enfrentado Stalin Fernando Armijo.`;
+    }
+    return "No tengo información sobre los desafíos de esa persona.";
+}
+
+function appendMessage(sender, message) {
+    const messagesDiv = document.getElementById('messages');
+    const messageElement = document.createElement('div');
+    messageElement.className = `message ${sender.toLowerCase()}`;
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    
+    if (sender === 'AI') {
+        let index = 0;
+        const typingSpeed = 50; // Velocidad de escritura en milisegundos
+
+        function type() {
+            if (index < message.length) {
+                messageElement.textContent += message.charAt(index);
+                index++;
+                setTimeout(type, typingSpeed);
+            }
+        }
+
+        type();
+    } else {
+        messageElement.textContent = message;
+    }
+}
+
+window.onload = function() {
+    setTimeout(() => {
+        appendMessage('AI', "Hola, bienvenido. Soy una IA creada por Fernando para servirte. ¿En qué puedo ayudarte hoy?");
+    }, 500); // 0.5 segundos de retraso para simular escritura
+};
