@@ -204,29 +204,53 @@ function clearChat() {
 }
 
 function appendMessage(sender, message, instant = false) {
+
     const messagesDiv = document.getElementById('messages');
+
     const messageElement = document.createElement('div');
+
     messageElement.className = `message ${sender.toLowerCase()}`;
+
     messagesDiv.appendChild(messageElement);
+
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
     
+
     if (sender === 'AI' && !instant) {
+
         let index = 0;
+
         const typingSpeed = 50; // Velocidad de escritura en milisegundos
 
+
+
         function type() {
+
             if (index < message.length) {
+
                 messageElement.textContent += message.charAt(index);
+
                 index++;
+
                 setTimeout(type, typingSpeed);
+
             }
+
         }
 
+
+
         type();
+
     } else {
+
         messageElement.innerHTML = message;
+
     }
+
 }
+
 
 function handleImageUpload(event) {
     const file = event.target.files[0];
