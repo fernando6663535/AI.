@@ -46,15 +46,16 @@ function loadConversation() {
     }
 }
 
+
 function sendMessage() {
     const inputField = document.getElementById('user-input');
-    const userMessage = inputField.value.toLowerCase().trim();
+    const userMessage = inputField.value.trim();
 
     if (!userMessage) return;
 
     appendMessage('You', inputField.value);
     const response = getResponse(userMessage);
-    appendMessage('AI', response);
+    appendMessage('AI', response, true); // Aplicar efecto de escritura
     inputField.value = '';
     saveConversation();
 }
@@ -62,15 +63,31 @@ function sendMessage() {
 function getResponse(message) {
     const normalizedMessage = message.toLowerCase();
 
+    // Comandos para borrar el chat
+    if (normalizedMessage.includes("borra todo") || normalizedMessage.includes("borrar todo") || normalizedMessage.includes("borrar chat") || normalizedMessage.includes("borrar conversación") || normalizedMessage.includes("limpiar chat")) {
+        clearChat();
+        return "El chat ha sido borrado.";
+    }
+
+    // Respuestas de agradecimiento
+    if (normalizedMessage.includes("gracias") || normalizedMessage.includes("gracias por") || normalizedMessage.includes("te lo agradezco")) {
+        return "¡De nada! Si necesitas más ayuda, no dudes en preguntar.";
+    }
+
+    // Identificación de la persona mencionada
     const personMentioned = identifyPerson(normalizedMessage);
 
     if (personMentioned) {
         context.lastPerson = personMentioned;
-    }
 
-    if (context.lastPerson) {
         if (normalizedMessage.includes("edad") || normalizedMessage.includes("cuántos años")) {
-            return `${context.lastPerson} tiene ${data[context.lastPerson].edad}.`;
+            if (context.lastPerson === "Nury") {
+                return `Nury tiene ${data["Nury"].edad}. Stalin Fernando Armijo tiene ${data["Stalin Fernando Armijo"].edad}.`;
+            } else if (context.lastPerson === "Stalin Fernando Armijo") {
+                return `Stalin Fernando Armijo tiene ${data["Stalin Fernando Armijo"].edad}. Nury tiene ${data["Nury"].edad}.`;
+            } else {
+                return "No tengo información sobre esa persona.";
+            }
         } else if (normalizedMessage.includes("hermanos") || normalizedMessage.includes("familia") || normalizedMessage.includes("familiares")) {
             return getFamilyDetails(context.lastPerson);
         } else if (normalizedMessage.includes("amigo") || normalizedMessage.includes("amigos")) {
@@ -92,6 +109,7 @@ function getResponse(message) {
         }
     }
 
+    // Respuestas generales y manejo de emojis
     if (normalizedMessage.includes("hola") || normalizedMessage.includes("buenos días") || normalizedMessage.includes("buenas tardes") || normalizedMessage.includes("buenas noches")) {
         return "¡Hola! Soy una IA creada por Fernando para servirte. ¿En qué puedo ayudarte hoy? Si tienes preguntas sobre Stalin Fernando Armijo o Nury, estaré encantado de responderlas.";
     } else if (normalizedMessage.includes("cómo estás") || normalizedMessage.includes("qué tal") || normalizedMessage.includes("cómo te va")) {
@@ -104,8 +122,10 @@ function getResponse(message) {
         return "Este bot está diseñado para proporcionar información sobre dos personas específicas: Stalin Fernando Armijo y Nury. Puedes preguntar sobre sus detalles personales, familia, intereses, y más.";
     } else if (normalizedMessage.includes("preguntas frecuentes") || normalizedMessage.includes("cómo funciona") || normalizedMessage.includes("dudas comunes")) {
         return "Puedes preguntar sobre aspectos específicos de Stalin Fernando Armijo o Nury, incluyendo su edad, familia, estudios, intereses, y más. También puedo responder a preguntas generales sobre cómo uso esta información.";
-    } else if (normalizedMessage.includes("dudas comunes") || normalizedMessage.includes("preguntas frecuentes")) {
-        return "Puedes preguntar sobre aspectos específicos de Stalin Fernando Armijo o Nury, incluyendo su edad, familia, estudios, intereses, y más. También puedo responder a preguntas generales sobre cómo uso esta información.";
+    } else if (normalizedMessage.includes("emoji") || normalizedMessage.includes("carita") || normalizedMessage.includes("símbolo")) {
+        return "¡Me encanta la variedad de emojis! Aunque no puedo interpretar todos los emojis de forma específica, puedo ayudarte con cualquier otra pregunta que tengas.";
+    } else if (normalizedMessage.includes("letra") || normalizedMessage.includes("alfabeto") || normalizedMessage.includes("abc")) {
+        return "Las letras del alfabeto son fundamentales en la comunicación escrita. Si tienes alguna pregunta sobre el alfabeto o letras específicas, ¡déjamelo saber!";
     } else {
         return "Lo siento, no entendí tu pregunta. Puedes intentar preguntar algo sobre Stalin Fernando Armijo o Nury, o decir 'hola' para obtener más información.";
     }
@@ -122,15 +142,10 @@ function identifyPerson(message) {
 }
 
 function getPersonDetails(person) {
-    return `Aquí tienes información sobre ${person}: ${Object.entries(data[person]).map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`).join(", ")}.`;
-}
-
-function getFamilyDetails(person) {
-    if (person === "Stalin Fernando Armijo") {
-        return `Stalin Fernando Armijo tiene los siguientes hermanos: ${data["Stalin Fernando Armijo"].familia.hermanos.join(", ")}. Su madre es ${data["Stalin Fernando Armijo"].familia.madre}.`;
-    } else if (person === "Nury") {
-        return `Nury tiene un hermano mayor y su hermana mayor se fue con su madre. Su padre está separado de su madre.`;
+    if (person === "Stalin Fernando Armijo" || person === "Nury") {
+        return `Aquí tienes información sobre ${person}: ${Object.entries(data[person]).map(([key, value]) => `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`).join(", ")}.`;
     }
+    return "No tengo información sobre esa persona.";
 }
 
 function getFriendDetails(person) {
@@ -182,6 +197,12 @@ function getChallenges(person) {
     return "No tengo información sobre los desafíos de esa persona.";
 }
 
+function clearChat() {
+    const messagesDiv = document.getElementById('messages');
+    messagesDiv.innerHTML = '';
+    saveConversation();
+}
+
 function appendMessage(sender, message, instant = false) {
     const messagesDiv = document.getElementById('messages');
     const messageElement = document.createElement('div');
@@ -209,15 +230,26 @@ function appendMessage(sender, message, instant = false) {
 
 function handleImageUpload(event) {
     const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const imageUrl = e.target.result;
-            appendMessage('You', `<img src="${imageUrl}" alt="Uploaded Image">`);
+            const fileUrl = e.target.result;
+            const fileType = file.type;
+
+            if (fileType.startsWith('image/')) {
+                appendMessage('You', `<img src="${fileUrl}" alt="Uploaded Image">`);
+                appendMessage('AI', "Aún no tengo las funciones al 100% para analizar imágenes 😞. Sorry, estoy aún al 0.1% de capacidad.");
+            } else if (fileType.startsWith('video/')) {
+                appendMessage('You', `<video controls src="${fileUrl}" alt="Uploaded Video"></video>`);
+                appendMessage('AI', "Aún no tengo las funciones al 100% para analizar videos 😞. Sorry, estoy aún al 0.1% de capacidad.");
+            }
         };
         reader.readAsDataURL(file);
     }
 }
+
+
+
 
 window.onload = function() {
     loadConversation();
@@ -235,3 +267,6 @@ document.getElementById('upload-button').addEventListener('click', () => {
 });
 
 document.getElementById('upload-input').addEventListener('change', handleImageUpload);
+
+
+
